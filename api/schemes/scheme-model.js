@@ -2,14 +2,12 @@
 const db = require('../../data/db-config.js');
 
 module.exports = {
-    /**
-     * find, 
-     * findById, 
-     * findSteps, 
-     * add, 
-     * update, 
-     * remove
-     */
+    find, 
+    findById, 
+    findSteps, 
+    add, 
+    update, 
+    remove
 }
 
 function find() {
@@ -34,6 +32,11 @@ async function add(schemesData) {
 
 async function update(id, changes) {
     await db('schemes').where({ id }).update(changes);
+    return await findById(id);
+}
+
+async function update(id, changes) {
+    await db('users').where({ id }).update(changes);
     return await findById(id);
 }
 
