@@ -41,10 +41,13 @@ async function add(schemesData) {
 }
 
 async function addStep(step, id) {
-    return await db('steps').insert(step, id);
+    const ids = await db('steps').insert(step);
+    return db('steps')
+        .insert(step, id)
+        .where({id: ids[0]})
 }
 
-async function update(id, changes) {
+async function update(changes, id) {
     await db('schemes').where({ id }).update(changes);
     return await findById(id);
 }
