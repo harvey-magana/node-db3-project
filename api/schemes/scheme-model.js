@@ -6,6 +6,7 @@ module.exports = {
     findById, 
     findSteps, 
     add, 
+    addStep,
     update, 
     remove
 }
@@ -19,24 +20,32 @@ function findById(id) {
 }
 
 function findSteps(id) {
-    return db('steps as s')
-        .join('schemes as sc', 'sc.id', 's.step_id')
-        .where({ step_id: id })
-        .select('s.id', 'sc.scheme_name', 's.step_number', 's.instructions');
-}
+    return db('steps as st')
+      .join(
+          'schemes as sch', 
+          'st.scheme_id', 
+          'sch.id'
+          )
+      .select(
+          'st.id', 
+          'st.step_number', 
+          'st.instructions', 
+          'sch.scheme_name'
+          )
+      .where('sch.id', id);
+  }
 
 async function add(schemesData) {
     const ids = await db('schemes').insert(schemesData);
     return newScheme = await findById(ids[0]);
 }
 
-async function update(id, changes) {
-    await db('schemes').where({ id }).update(changes);
-    return await findById(id);
+async function addStep(step, id) {
+    return await db('steps').insert(step, id);
 }
 
 async function update(id, changes) {
-    await db('users').where({ id }).update(changes);
+    await db('schemes').where({ id }).update(changes);
     return await findById(id);
 }
 
